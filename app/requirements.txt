@@ -1,0 +1,7 @@
+pypdf>=5.0.0
+python-docx>=1.1.0
+openpyxl>=3.1.0
+rapidocr-onnxruntime==1.2.3
+onnxruntime
+pillow>=10.0.0
+pytesseract
