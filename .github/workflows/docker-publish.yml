@@ -1,4 +1,4 @@
-name: Build and Publish ROCm RAG Image
+name: Push ROCm Image to GHCR
 
 on:
   push:
@@ -6,49 +6,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
   packages: write
+  contents: read
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+  push-image:
+    runs-on: self-hosted
     steps:
-      - name: Maximize build space for Docker
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 4096
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          build-mount-path: '/var/lib/docker'
-
-      - name: Restart Docker daemon
-        run: sudo service docker restart
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to GitHub Container Registry (GHCR)
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Downcase repo name for docker tag
-        id: repo_name
+        shell: pwsh
         run: |
-          echo "REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+          "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: |
-            ghcr.io/${{ steps.repo_name.outputs.REPO }}:latest
-            ghcr.io/${{ steps.repo_name.outputs.REPO }}:v1
+      - name: Push pre-built image to GHCR
+        shell: pwsh
+        run: |
+          docker push ghcr.io/moyu-dev16/amd-mc3-rag:v1
+          docker push ghcr.io/moyu-dev16/amd-mc3-rag:latest
