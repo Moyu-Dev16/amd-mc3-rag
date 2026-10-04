@@ -14,12 +14,12 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Log in to GitHub Container Registry (GHCR)
-        shell: pwsh
+        shell: powershell
         run: |
           "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push pre-built image to GHCR
-        shell: pwsh
+        shell: powershell
         run: |
           docker push ghcr.io/moyu-dev16/amd-mc3-rag:v1
           docker push ghcr.io/moyu-dev16/amd-mc3-rag:latest
