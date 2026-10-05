@@ -33,10 +33,10 @@ Achieved **200 / 200 (100% Full Marks)** on the official AMD ROCm GPU cluster be
 
 ## 📦 Container Registry
 
-The container image is built and published via GitHub Actions to GitHub Container Registry (GHCR):
+The container image is built and published to a container registry:
 
 ```bash
-docker pull ghcr.io/moyu-dev16/amd-mc3-rag:v1
+docker pull <your-registry>/<your-image>:<tag>
 ```
 
 Evaluation CLI invocation:
@@ -45,13 +45,13 @@ Evaluation CLI invocation:
 docker run --rm --network none \
   -v /path/to/corpus:/app/corpus \
   -v /path/to/output:/app/output \
-  ghcr.io/moyu-dev16/amd-mc3-rag:v1 \
+  <your-image>:<tag> \
   python3 /app/app.py --index /app/corpus
 
 # 2. Query phase
 docker run --rm --network none \
   -v /path/to/corpus:/app/corpus \
   -v /path/to/output:/app/output \
-  ghcr.io/moyu-dev16/amd-mc3-rag:v1 \
+  <your-image>:<tag> \
   python3 /app/app.py --corpus /app/corpus --query-id query_01 --query "What is the maximum junction temperature of the TQ-40?"
 ```
